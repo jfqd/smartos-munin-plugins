@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+#
+# munin plugin for monitoring zfs memory
+#
+# http://www.solarisinternals.com/wiki/index.php/ZFS_Evil_Tuning_Guide#Limiting_the_ARC_Cache
+
+#%# family=auto
+#%# capabilities=autoconf
+
+if [ "$1" = "config" ]; then
+  echo "graph_title ZFS Memory Consumption"
+  echo 'graph_args --upper-limit 100 -l 0'
+  echo 'graph_category disk'
+  echo 'graph_vlabel Memory in %'
+  echo 'memory.label memory'
+  exit 0
+fi;
+
+echo -n "memory.value "
+/usr/bin/echo ::memstat | /usr/bin/mdb -k | /usr/bin/grep 'ZFS' | /usr/bin/awk '{ print $6}' | /usr/bin/sed 's/%//g'

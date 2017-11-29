@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+
+#%# family=auto
+#%# capabilities=autoconf
+
+if [ "$1" = "autoconf" ]; then
+	if [ `uname -s` = SunOS ]; then
+		echo no
+		exit 1
+	else
+		echo yes
+		exit 0
+	fi
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_category system'
+	echo 'graph_title Zone-Memory usage (in %)'
+	echo 'graph_args --upper-limit 100 -l 0'
+	echo 'graph_vlabel %'
+  for zone in `/usr/sbin/zoneadm list`; do
+    if [ "$zone" == "global" ]; then
+      echo "$zone.label $zone"
+    else
+      alias=`/usr/sbin/vmadm get "$zone" | /usr/bin/json 'alias'`
+      echo "$zone.label $alias"
+    fi
+  done
+	exit 0
+fi
+
+/usr/bin/prstat -Zcn 0,100 2 1 | /usr/bin/tail -n +2 | /usr/bin/grep -v 'Total: ' | /usr/bin/sed 's/%//g' | /usr/bin/awk '{printf "%s.value %.0f\n", $8, $5}'
