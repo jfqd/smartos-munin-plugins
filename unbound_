@@ -36,15 +36,15 @@
 # If you are only a casual user, the _hits and _by_type are most interesting,
 # possibly followed by _by_rcode.
 #
-#	unbound_munin_hits	- base volume, cache hits, unwanted traffic
-#	unbound_munin_queue	- to monitor the internal requestlist
-#	unbound_munin_memory	- memory usage
-#	unbound_munin_by_type	- incoming queries by type
-#	unbound_munin_by_class	- incoming queries by class
-#	unbound_munin_by_opcode	- incoming queries by opcode
-#	unbound_munin_by_rcode	- answers by rcode, validation status
-#	unbound_munin_by_flags	- incoming queries by flags
-#	unbound_munin_histogram	- histogram of query resolving times
+#	unbound_hits	- base volume, cache hits, unwanted traffic
+#	unbound_queue	- to monitor the internal requestlist
+#	unbound_memory	- memory usage
+#	unbound_by_type	- incoming queries by type
+#	unbound_by_class	- incoming queries by class
+#	unbound_by_opcode	- incoming queries by opcode
+#	unbound_by_rcode	- answers by rcode, validation status
+#	unbound_by_flags	- incoming queries by flags
+#	unbound_histogram	- histogram of query resolving times
 #
 # Magic markers - optional - used by installation scripts and
 # munin-config:  (originally contrib family but munin-node-configure ignores it)
@@ -78,15 +78,15 @@ Use the .env settings to override the defaults.
 
 Can be used to present different graphs. Use ln -s for that name in
 the plugins directory to enable the graph.
-unbound_munin_hits	- base volume, cache hits, unwanted traffic
-unbound_munin_queue	- to monitor the internal requestlist
-unbound_munin_memory	- memory usage
-unbound_munin_by_type	- incoming queries by type
-unbound_munin_by_class	- incoming queries by class
-unbound_munin_by_opcode	- incoming queries by opcode
-unbound_munin_by_rcode	- answers by rcode, validation status
-unbound_munin_by_flags	- incoming queries by flags
-unbound_munin_histogram - histogram of query resolving times
+unbound_hits	- base volume, cache hits, unwanted traffic
+unbound_queue	- to monitor the internal requestlist
+unbound_memory	- memory usage
+unbound_by_type	- incoming queries by type
+unbound_by_class	- incoming queries by class
+unbound_by_opcode	- incoming queries by opcode
+unbound_by_rcode	- answers by rcode, validation status
+unbound_by_flags	- incoming queries by flags
+unbound_histogram - histogram of query resolving times
 
 =head1 AUTHOR
 
@@ -198,7 +198,7 @@ if test "$1" = "suggest" ; then
 fi
 
 # determine my type, by name
-id=`echo $0 | sed -e 's/^.*unbound_munin_//'`
+id=`echo $0 | sed -e 's/^.*unbound_//'`
 if test "$id"x = ""x; then
 	# some default to keep people sane.
 	id="hits"
