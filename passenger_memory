@@ -1,0 +1,28 @@
+#!/opt/local/bin/ruby
+
+def output_config
+  puts <<-END
+graph_category App
+graph_title passenger memory in MB
+graph_vlabel count
+
+memory.label active processes
+END
+  exit 0
+end
+
+def output_values
+  status = `/opt/local/sbin/passenger-status`
+  unless $?.success?
+    $stderr.puts "failed executing passenger-status"
+    exit 1
+  end
+  memory = status.scan(/Memory\s+:\s+(\d+)/).map {|i| i[0].to_i}.inject(0, :+)
+  puts "memory.value #{memory}"
+end
+
+if ARGV[0] == "config"
+  output_config
+else
+  output_values
+end
