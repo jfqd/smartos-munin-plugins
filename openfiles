@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+
+#%# family=auto
+#%# capabilities=autoconf
+
+if [ "$1" = "autoconf" ]; then
+  if [ `uname -s` = SunOS ]; then
+    echo no
+    exit 1
+  else
+    echo yes
+    exit 0
+  fi
+fi
+
+if [ "$1" = "config" ]; then
+  echo 'graph_category system'
+  echo 'graph_title Openfiles'
+  echo 'graph_vlabel Files'
+  echo 'files.label number'
+  #echo 'system.draw AREA'
+  #echo 'system.type DERIVE'
+  echo 'files.min 0'
+  echo "files.max `/usr/bin/ulimit -n`"
+  exit 0
+fi
+
+(cd /proc ; NUMOF=0 ; for i in *; do OF=`pfiles $i 2>/dev/null | nawk '/[0-9]: /{a++}END{print a}'`; [[ ! -z "$OF" ]] && NUMOF=$(( $NUMOF + $OF )); done; echo "files.value $NUMOF")
