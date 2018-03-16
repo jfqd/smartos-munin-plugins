@@ -6,7 +6,7 @@ graph_category App
 graph_title Apache virtual memory in MB
 graph_vlabel count
 
-memory.label active processes
+memory.label memory
 END
   exit 0
 end
