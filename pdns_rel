@@ -1,0 +1,52 @@
+#!/usr/bin/bash
+#
+# Script to monitor PowerDNS performance
+#
+# Parameters understood:
+#
+#       config   (required)
+#       autoconf (optional - used by munin-config)
+#%# family=auto
+#%# capabilities=autoconf
+
+command="/opt/local/bin/pdns_control show"
+state_file=/opt/local/var/munin/plugin-state/pdns_rel.state
+
+if [ "$1" = "autoconf" ]; then
+        echo yes
+        exit 0
+fi
+
+if [ "$1" = "config" ]; then
+        echo 'graph_title Power DNS Packet Cache Performance'
+        echo 'graph_args -l 0 --upper-limit 100 --base 1000'
+        echo 'graph_vlabel %'
+        echo 'graph_category Power DNS'
+        echo 'graph_info This graph shows the Power DNS packet cache performance on the machine.'
+        echo 'packetcache_hitrate.label packet cache hitrate'
+        echo 'packetcache_hitrate.type GAUGE'
+        echo 'packetcache_hitrate.min 0'
+        echo 'packetcache_hitrate.max 100'
+        echo 'packetcache_hitrate.info Hits on the packets cache'
+        exit 0
+fi
+
+hits=`$command packetcache-hit`
+queries=`$command udp-queries`
+seven_minutes_ago=`/usr/bin/date --date="7 minutes ago" +%s`
+
+if [ -f $state_file ] && [ `/usr/bin/ls -l --time-style=+%s $state_file | /usr/bin/awk '{print $6}'` -gt $seven_minutes_ago ] ; then
+
+  old_hits=`/usr/bin/cat $state_file | /usr/bin/head -n1`
+  old_queries=`/usr/bin/cat $state_file | /usr/bin/tail -n1`
+
+  d_hits=$(($hits - $old_hits))
+  d_queries=$(($queries - $old_queries))
+  if [ $d_queries -gt 0 ] ; then
+    echo packetcache_hitrate.value $(( $d_hits * 100 / $d_queries ))
+  fi
+
+fi
+
+echo $hits > $state_file
+echo $queries >> $state_file

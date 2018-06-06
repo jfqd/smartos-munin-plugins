@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+outlets = %x(\
+/usr/bin/snmpget \
+-Oqv \
+-v #{ENV['version']} \
+-u #{ENV['security_name']} \
+-l #{ENV['security_level']} \
+-A '#{ENV['auth_passphrase']}' \
+#{ENV['host']} \
+.1.3.6.1.4.1.534.6.6.7.6.1.1.3.0.{1..16}).gsub("\"","").split("\n")
+
+
+consumption = %x(\
+/usr/bin/snmpget \
+-Oqv \
+-v #{ENV['version']} \
+-u #{ENV['security_name']} \
+-l #{ENV['security_level']} \
+-A '#{ENV['auth_passphrase']}' \
+#{ENV['host']} \
+.1.3.6.1.4.1.534.6.6.7.6.5.1.3.0.{1..16}).split("\n")
+
+if ARGV.first == "config"
+  puts "graph_title epdu Watt"
+  puts 'graph_category epdu'
+  puts 'graph_vlabel Watt'
+  outlets.each_with_index do |outlet,idx|
+    puts "port#{idx}.label #{outlet}" if consumption[idx].to_i > 0
+  end
+else
+  outlets.each_with_index do |outlet,idx|
+    c = consumption[idx]
+    puts "port#{idx}.value #{c}" if c.to_i > 0
+  end
+end
