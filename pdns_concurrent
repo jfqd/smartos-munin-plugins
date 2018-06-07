@@ -24,7 +24,7 @@ if [ "$1" = "config" ]; then
     echo 'graph_order concurrent'
     echo 'graph_vlabel queries'
     echo 'graph_info Concurrent queries'
-    echo 'graph_category pdns'
+    echo 'graph_category PowerDNS'
 
     echo 'concurrent.label queries'
     echo 'concurrent.min 0'
