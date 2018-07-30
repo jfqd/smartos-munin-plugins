@@ -26,7 +26,7 @@ $aborted = 0;
 
 ($dirname = $0) =~ s/[^\/]+$//;
 
-$logfile = $ENV{'LOGFILE'} || '/var/log/dovecot/info';
+$logfile = $ENV{'LOGFILE'} || '/var/log/dovecot.log';
 
 # Use an overrided $PATH for all external programs if needed
 $DOVEADM = "/opt/local/bin/doveadm";
