@@ -1,7 +1,7 @@
-#!/usr/bin/env ruby
+#!/opt/local/bin/ruby
 
 outlets = %x(\
-/usr/bin/snmpget \
+/opt/local/bin/snmpget \
 -Oqv \
 -v #{ENV['version']} \
 -u #{ENV['security_name']} \
@@ -12,7 +12,7 @@ outlets = %x(\
 
 
 consumption = %x(\
-/usr/bin/snmpget \
+/opt/local/bin/snmpget \
 -Oqv \
 -v #{ENV['version']} \
 -u #{ENV['security_name']} \
