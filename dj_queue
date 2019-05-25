@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+
+if [ "$1" = "autoconf" ]; then
+        echo yes
+        exit 0
+fi
+
+if [ "$1" = "config" ]; then
+        echo 'graph_title DJ queue size'
+        echo 'graph_args -l 0'
+        echo 'graph_vlabel number of waiting jobs'
+        echo 'graph_category App'
+        echo 'graph_info This graph DJ queue size.'
+        echo 'qsize.label qsize'
+        echo 'qsize.info Number of jobs waiting to be processed'
+        echo 'qsize.type GAUGE'
+        exit 0
+fi
+
+echo -n "qsize.value "
+cd /home/ruby/www/current && \
+  source /home/ruby/www/shared/gems/bin/activate && \
+  bundle exec ./script/runner 'puts ActiveRecord::Base.connection.select_one("SELECT count(*) AS size FROM delayed_jobs")["size"]'
